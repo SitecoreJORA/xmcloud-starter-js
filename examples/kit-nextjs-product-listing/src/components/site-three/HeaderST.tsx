@@ -1,8 +1,6 @@
 'use client';
 
 import { useToggleWithClickOutside } from '@/hooks/useToggleWithClickOutside';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Link as ContentSdkLink,
   NextImage as ContentSdkImage,
@@ -11,7 +9,6 @@ import {
   Placeholder,
 } from '@sitecore-content-sdk/nextjs';
 import Link from 'next/link';
-import { MiniCart } from './non-sitecore/MiniCart';
 import { SearchBox } from './non-sitecore/SearchBox';
 import { ComponentProps } from 'lib/component-props';
 
@@ -33,17 +30,20 @@ export const Default = (props: HeaderSTProps) => {
 
   return (
     <section className={`${props.params?.styles}`} data-class-change>
-      <div className="flex justify-between items-start">
+      <div className="flex flex-wrap header-max-height justify-between items-start">
         <Link
           href="/"
-          className="relative flex justify-center items-center grow-0 shrink-0 w-24 lg:w-32 h-24 lg:h-32 p-4 lg:p-6 bg-primary z-100"
+          className="relative flex header-max-height justify-center items-center grow-0 shrink-0 w-24 lg:w-32 h-24 lg:h-32 p-4 lg:p-6 z-100"
           prefetch={false}
         >
-          <ContentSdkImage field={props.fields?.Logo} className="w-full h-full object-contain" />
+          <ContentSdkImage
+            field={props.fields?.Logo}
+            className="w-full header-max-height h-full object-contain"
+          />
         </Link>
 
         <div
-          className="relative flex [.partial-editing-mode_&]:flex-col-reverse justify-between items-start gap-10 grow max-w-7xl lg:px-4 bg-background"
+          className="relative flex nav-font-style margin-auto [.partial-editing-mode_&]:flex-col-reverse justify-between items-start gap-10 grow max-w-7xl lg:px-4 content-center bg-background"
           role="navigation"
         >
           <div
@@ -69,7 +69,7 @@ export const Default = (props: HeaderSTProps) => {
                 <ContentSdkLink
                   field={props.fields?.SupportLink}
                   prefetch={false}
-                  className="block p-4 font-(family-name:--font-accent) font-medium"
+                  className="block p-4 nav-font-style font-(family-name:--font-accent) font-medium"
                 />
               </li>
             </ul>
@@ -80,7 +80,7 @@ export const Default = (props: HeaderSTProps) => {
                 <ContentSdkLink
                   field={props.fields?.SupportLink}
                   prefetch={false}
-                  className="block p-4 font-(family-name:--font-accent) font-medium"
+                  className="block p-4 nav-font-style font-(family-name:--font-accent) font-medium"
                 />
               </li>
               <li className="mr-auto lg:mr-0">
@@ -90,7 +90,7 @@ export const Default = (props: HeaderSTProps) => {
                   <ContentSdkLink
                     field={props.fields?.SearchLink}
                     prefetch={false}
-                    className="block p-4 font-(family-name:--font-accent) font-medium"
+                    className="block p-4 nav-font-style font-(family-name:--font-accent) font-medium"
                   />
                 )}
               </li>
@@ -115,19 +115,6 @@ export const Default = (props: HeaderSTProps) => {
                     }`}
                   />
                 </span>
-              </li>
-              <li>
-                {props.params.showMiniCart ? (
-                  <MiniCart cartLink={props.fields?.CartLink} />
-                ) : (
-                  <ContentSdkLink
-                    field={props.fields?.CartLink}
-                    prefetch={false}
-                    className="block p-4"
-                  >
-                    <FontAwesomeIcon icon={faShoppingCart} width={24} height={24} />
-                  </ContentSdkLink>
-                )}
               </li>
             </ul>
           </div>

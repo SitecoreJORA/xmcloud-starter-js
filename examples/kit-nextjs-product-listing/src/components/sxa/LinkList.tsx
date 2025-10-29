@@ -43,7 +43,8 @@ const LinkListItem = (props: LinkListItemProps) => {
   }
   return (
     <li className={className}>
-      <div>
+      <div className="linklistelement">
+        <span>&gt;</span>
         <ContentSdkLink
           className="text-gray-600 hover:underline focus:border focus:border-dashed focus:border-gray-500 inline-block px-2 py-2 focus:bg-gray-50 focus:outline focus:outline-dashed focus:ring-gray-500 aria-selected:bg-gray-100 text-nowrap word-break-[break-word] text-sm"
           field={props.field}
@@ -72,7 +73,7 @@ export const Default = (props: LinkListProps): JSX.Element => {
       ));
 
     return (
-      <div data-class-change className={styles} id={id ? id : undefined}>
+      <div data-class-change className={styles} id="component linklist">
         <div className="flex flex-col">
           <Text
             tag="h3"
@@ -301,6 +302,49 @@ export const HeaderSecondaryLinks = (props: LinkListProps): JSX.Element => {
           <Text field={datasource?.field?.title} />
         </h5>
         <ul className="flex flex-col gap-1">{list}</ul>
+      </div>
+    );
+  }
+
+  return (
+    <div data-class-change className={styles} id={id ? id : undefined}>
+      <div className="component-content">
+        <h3>Link List</h3>
+      </div>
+    </div>
+  );
+};
+
+export const BackgroundDefault = (props: LinkListProps): JSX.Element => {
+  const datasource = props.fields?.data?.datasource;
+  const styles = `max-w-xs w-100 p-5 bg-background rounded-xl shadow-md/30
+ font-sans ${props.params.styles}`.trimEnd();
+  const id = props.params.RenderingIdentifier;
+
+  if (datasource) {
+    const list = datasource.children.results
+      .filter((element: ResultsFieldLink) => element?.field?.link)
+      .map((element: ResultsFieldLink, key: number) => (
+        <LinkListItem
+          index={key}
+          key={`${key}${element.field.link}`}
+          total={datasource.children.results.length}
+          field={element.field.link}
+        />
+      ));
+
+    return (
+      <div data-class-change className={styles} id="component linklist">
+        <div className="flex flex-col">
+          <Text
+            tag="h3"
+            field={datasource?.field?.title}
+            className="text-nowrap mb-5 text-xl font-bold headlinecolor"
+          />
+          <ul className="list-none p-0 m-0" role="listbox" aria-label="Navigation options">
+            {list}
+          </ul>
+        </div>
       </div>
     );
   }

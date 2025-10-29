@@ -72,6 +72,7 @@ import * as PlaceholderTabs from 'components/component-library/PlaceholderTabs';
 import * as Portal from 'components/portal/portal.dev';
 import * as ProductComparison from 'components/site-three/ProductComparison';
 import * as ProductPageHeader from 'components/site-three/ProductPageHeader';
+import * as ArticlePageHeader from 'components/site-three/ArticlePageHeader';
 import * as ProductListing from 'components/product-listing/ProductListing';
 import * as ProductsSection from 'components/component-library/ProductsSection';
 import * as Promo from 'components/sxa/Promo';
@@ -175,6 +176,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['Portal', Portal],
   ['ProductComparison', ProductComparison],
   ['ProductPageHeader', ProductPageHeader],
+  ['ArticlePageHeader', ArticlePageHeader],
   ['ProductListing', ProductListing],
   ['ProductsSection', ProductsSection],
   ['Promo', Promo],

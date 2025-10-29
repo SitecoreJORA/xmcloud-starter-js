@@ -1,0 +1,117 @@
+.container-gray-background{
+    background-color: #f2f2f2;
+}
+
+.container-dark-background{
+    background-color: #0b6b6f;
+    h3,a,span{
+        color: white!important;
+    }
+}
+
+#footer{
+    #linklist{
+        background-color: #006fce;
+        h3,a,span{
+            color: white!important;
+        }
+        
+    }
+}
+
+h1,h2,h3,h4,h5,p,span,a{
+    font-family: 'IBM Plex Sans'!important;
+}
+
+h1{
+    font-size: 34px;
+    font-weight: 500;
+    color: #0a6c6f;
+}
+
+h2{
+    font-size: 29px;
+    font-weight: 500;
+    color: #0a6c6f;
+}
+h3{
+    font-size: 21px;
+    font-weight: 500;
+    color: #0a6c6f;
+}
+
+.margin-auto{
+    margin: auto;
+}
+
+.header-max-height{
+    max-height: 100px;
+}
+
+.nav-font-style{
+    a,span{
+        font-weight: 100;
+        font-size: 14px;
+        color: #0a6c6f;
+    }
+}
+
+.btn-primary{
+    background-color: #006fce;
+    color: white;
+    border-radius: 30px;
+}
+
+.btn-secondary{
+    background-color: transparent;
+    padding: 0;
+    color: #006fce;
+
+}
+
+.btn-outline{
+    background-color: transparent;
+    padding: 15px;
+    color: #006fce;
+    border: #006fce 2px solid;
+    border-radius: 30px;
+    width: -webkit-fill-available;
+}
+
+.container-color-background{
+    background-color: #e5f7f7;
+}
+
+.linklistelement {
+    color: blue;
+    a{
+        color: blue;
+        text-decoration: underline;
+    }
+}
+
+.headlinecolor{
+    color: #0a6c6f;
+}
+
+.ck-content ul{
+    position: relative;
+    margin-left: 20px;
+}
+
+#article-header-text{
+    max-width: 1216px;
+    place-self: center;
+}
+
+.hide-promo-button{
+    #PromoLink{
+        display: none;
+    }
+}
+
+.hide-promo-image{
+    #PromoImage{
+        display: none;
+    }
+}

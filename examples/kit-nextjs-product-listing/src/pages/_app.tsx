@@ -4,6 +4,7 @@ import Bootstrap from 'src/Bootstrap';
 import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import scConfig from 'sitecore.config';
 import './globals.css';
+import './main.scss';
 
 import type { JSX } from 'react';
 

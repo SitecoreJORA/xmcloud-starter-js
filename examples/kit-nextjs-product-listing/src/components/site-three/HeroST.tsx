@@ -23,11 +23,11 @@ type PageHeaderSTProps = {
 };
 
 export const Default = (props: PageHeaderSTProps) => {
-  const { containerRef, rightOffset } = useContainerOffsets();
+  const { containerRef } = useContainerOffsets();
 
   return (
     <section
-      className={`relative flex items-center border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
+      className={`relative flex items-center pt-20 ${props?.params?.styles || ''}`}
       data-class-change
     >
       <div className="absolute inset-0 z-10">
@@ -38,13 +38,13 @@ export const Default = (props: PageHeaderSTProps) => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="relative lg:container w-full lg:flex mx-auto z-20" ref={containerRef}>
-        <div className="flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[50rem] px-4 py-8 lg:p-8 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)]">
+      <div
+        className="relative lg:container xs:mx-10 xl:ml-28 lg:ml-10 w-full lg:flex mx-auto z-20"
+        ref={containerRef}
+      >
+        <div className="flex flex-col justify-center rounded-xl mt-10 mb-10 px-4 py-8 lg:p-8 bg-[_rgba(255,255,255,0.70)]">
           <div className="lg:max-w-3xl">
-            <h5 className="text-primary text-xl lg:text-3xl pb-4 uppercase">
-              <ContentSdkText field={props?.fields?.Eyebrow} />
-            </h5>
-            <h1 className="text-4xl lg:text-7xl uppercase">
+            <h1 className="text-4xl lg:text-7xl">
               <ContentSdkText field={props?.fields?.Title} />
             </h1>
             <div className="mt-8">
@@ -53,25 +53,8 @@ export const Default = (props: PageHeaderSTProps) => {
                 prefetch={false}
                 className="btn btn-primary mr-4"
               />
-              <ContentSdkLink
-                field={props?.fields?.Link2}
-                prefetch={false}
-                className="btn btn-secondary"
-              />
             </div>
           </div>
-        </div>
-        <div
-          className={`lg:absolute top-0 bottom-0 left-2/3`}
-          style={{ right: `-${rightOffset - 16}px` }}
-        >
-          <ContentSdkImage
-            field={props?.fields?.Image1}
-            width={1920}
-            height={1080}
-            priority={true}
-            className="aspect-7/4 lg:aspect-auto w-full h-full object-cover"
-          />
         </div>
       </div>
     </section>

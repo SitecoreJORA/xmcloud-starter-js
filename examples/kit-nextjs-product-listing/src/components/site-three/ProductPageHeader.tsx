@@ -144,3 +144,57 @@ export const Default = (props: ProductPageHeaderProps) => {
     </section>
   );
 };
+
+export const Simple = (props: ProductPageHeaderProps) => {
+  const [selectedColor, setSelectedColor] = useState<Enum | null>(null);
+
+  useEffect(() => {
+    if (!selectedColor && props.fields?.Colors?.length > 0) {
+      setSelectedColor(props.fields?.Colors[0]);
+    }
+  }, [props.fields?.Colors, selectedColor]);
+
+  // Fall back to an empty array until the field populates
+  const images = props.fields?.Images ?? [];
+  const productImages = images.length === 2 ? [...images, ...images] : images;
+
+  return (
+    <section
+      className={`relative flex flex-col lg:justify-end lg:items-end lg:pt-12 lg:min-h-[50rem] overflow-hidden ${props.params?.styles}`}
+      data-class-change
+    >
+      <div className="inset-0 z-10 h-128 lg:absolute lg:h-full **:h-full">
+        <Carousel opts={{ loop: true, align: 'start' }} className="relative">
+          <CarouselContent fullWidth>
+            {productImages.map((image) => {
+              return (
+                <CarouselItem
+                  key={image.id}
+                  className={`bg-cover bg-center ${
+                    productImages.length === 1 ? 'w-full' : 'basis-[calc(100%-3.5rem)] lg:basis-1/2'
+                  }`}
+                  style={{ backgroundImage: `url(${image.url})` }}
+                ></CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          <div className="absolute bottom-6 lg:bottom-14 left-0 !h-10 w-full lg:w-1/2 flex items-center justify-center gap-2">
+            <CarouselPrevious className="static inset-0 translate-0 h-10 w-10 bg-secondary hover:bg-secondary-hover border-0 disabled:hidden" />
+            <CarouselNext className="static inset-0 translate-0 h-10 w-10 bg-secondary hover:bg-secondary-hover border-0 disabled:hidden" />
+          </div>
+        </Carousel>
+      </div>
+      <div
+        className="relative flex flex-col w-full gap-6 p-10 bg-white z-20"
+        id="article-header-text"
+      >
+        <h1 className="text-2xl">
+          <ContentSdkText field={props.fields?.ProductName} />
+        </h1>
+        <p className="text-sm">
+          <ContentSdkText field={props.fields?.Description} />
+        </p>
+      </div>
+    </section>
+  );
+};
