@@ -73,6 +73,9 @@ import * as Portal from 'components/portal/portal.dev';
 import * as ProductComparison from 'components/site-three/ProductComparison';
 import * as ProductPageHeader from 'components/site-three/ProductPageHeader';
 import * as ArticlePageHeader from 'components/site-three/ArticlePageHeader';
+import * as ArticlePageContent from 'components/site-three/ArticlePageContent';
+import * as ArticlePageTitle from 'components/site-three/ArticlePageTitle';
+import * as ArticlePageImage from 'components/site-three/ArticlePageImage';
 import * as ProductListing from 'components/product-listing/ProductListing';
 import * as ProductsSection from 'components/component-library/ProductsSection';
 import * as Promo from 'components/sxa/Promo';
@@ -177,6 +180,9 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ProductComparison', ProductComparison],
   ['ProductPageHeader', ProductPageHeader],
   ['ArticlePageHeader', ArticlePageHeader],
+  ['ArticlePageContent', ArticlePageContent],
+  ['ArticlePageTitle', ArticlePageTitle],
+  ['ArticlePageImage', ArticlePageImage],
   ['ProductListing', ProductListing],
   ['ProductsSection', ProductsSection],
   ['Promo', Promo],

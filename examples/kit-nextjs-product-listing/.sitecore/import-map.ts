@@ -101,12 +101,11 @@ import { VideoBase } from 'components/video/Video';
 import { Carousel as Carousel_ce3eef99455ea7c2afccc224600715d860faabdd, CarouselContent as CarouselContent_ce3eef99455ea7c2afccc224600715d860faabdd, CarouselItem as CarouselItem_ce3eef99455ea7c2afccc224600715d860faabdd, CarouselNext as CarouselNext_ce3eef99455ea7c2afccc224600715d860faabdd, CarouselPrevious as CarouselPrevious_ce3eef99455ea7c2afccc224600715d860faabdd } from 'shadcd/components/ui/carousel';
 import { useToggleWithClickOutside } from '@/hooks/useToggleWithClickOutside';
 import { useContainerOffsets } from '@/hooks/useContainerOffsets';
-import { faShoppingCart, faStar, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MiniCart } from 'src/components/site-three/non-sitecore/MiniCart';
 import { SearchBox } from 'src/components/site-three/non-sitecore/SearchBox';
 import { faFacebook, faInstagram, faLinkedinIn, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from 'shadcd/components/ui/accordion';
+import { faShoppingCart, faStar, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Head from 'next/head';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { PromoImageDefault } from 'src/components/promo-image/PromoImageDefault.dev';
@@ -891,26 +890,6 @@ const importMap = [
     ]
   },
   {
-    module: '@fortawesome/free-solid-svg-icons',
-    exports: [
-      { name: 'faShoppingCart', value: faShoppingCart },
-      { name: 'faStar', value: faStar },
-      { name: 'faChevronRight', value: faChevronRight },
-    ]
-  },
-  {
-    module: '@fortawesome/react-fontawesome',
-    exports: [
-      { name: 'FontAwesomeIcon', value: FontAwesomeIcon },
-    ]
-  },
-  {
-    module: 'src/components/site-three/non-sitecore/MiniCart',
-    exports: [
-      { name: 'MiniCart', value: MiniCart },
-    ]
-  },
-  {
     module: 'src/components/site-three/non-sitecore/SearchBox',
     exports: [
       { name: 'SearchBox', value: SearchBox },
@@ -926,12 +905,26 @@ const importMap = [
     ]
   },
   {
+    module: '@fortawesome/react-fontawesome',
+    exports: [
+      { name: 'FontAwesomeIcon', value: FontAwesomeIcon },
+    ]
+  },
+  {
     module: 'shadcd/components/ui/accordion',
     exports: [
       { name: 'Accordion', value: Accordion },
       { name: 'AccordionContent', value: AccordionContent },
       { name: 'AccordionItem', value: AccordionItem },
       { name: 'AccordionTrigger', value: AccordionTrigger },
+    ]
+  },
+  {
+    module: '@fortawesome/free-solid-svg-icons',
+    exports: [
+      { name: 'faShoppingCart', value: faShoppingCart },
+      { name: 'faStar', value: faStar },
+      { name: 'faChevronRight', value: faChevronRight },
     ]
   },
   {

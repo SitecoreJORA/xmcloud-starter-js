@@ -33,7 +33,7 @@ export const Default = (props: HeaderSTProps) => {
       <div className="flex flex-wrap header-max-height justify-between items-start">
         <Link
           href="/"
-          className="relative flex header-max-height justify-center items-center grow-0 shrink-0 w-24 lg:w-32 h-24 lg:h-32 p-4 lg:p-6 z-100"
+          className="relative flex header-max-height justify-center items-center grow-0 shrink-0 w-24 lg:w-32 h-24 lg:h-32 z-100"
           prefetch={false}
         >
           <ContentSdkImage
