@@ -3,15 +3,16 @@
 
 @layer base {
   html {
-    font-family: 'Open Sans', 'Segoe UI', SegueUI, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family:
+      'Open Sans', 'Segoe UI', SegueUI, 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
     font-size: 1rem;
     line-height: 1.5;
     font-weight: 400;
-    color: var(--color-brand-black);
+    color: #23366f;
   }
 
   * {
-    font-family: var(--font-body);
+    font-family: system-ui;
   }
 
   h1,
@@ -26,7 +27,7 @@
   .h5,
   h6,
   .h6 {
-    font-family: var(--font-heading);
+    font-family: system-ui;
     @apply leading-normal;
 
     span {
@@ -67,14 +68,15 @@
 
   /* BUTTONS */
   .btn {
-    font-family: var(--font-accent);
+    font-family: system-ui;
     @apply inline-block text-sm font-medium transition-colors;
 
     &.btn-primary {
       @apply py-3 px-5 rounded-full bg-primary;
+      color: white;
 
       &:hover {
-        @apply bg-primary-hover;
+        background-color: #1d5a99;
       }
     }
 

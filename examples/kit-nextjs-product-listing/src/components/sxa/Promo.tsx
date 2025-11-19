@@ -36,17 +36,15 @@ export const Default = (props: PromoProps): JSX.Element => {
     return (
       <div
         data-class-change
-        className={`component promo flex-1 shadow-lg pointer mb-5 lg:mb-0 ${props.params.styles}`}
+        className={`component promo flex-1 rounded-b-xl pb-10 shadow-lg pointer mb-5 lg:mb-0 ${props.params.styles}`}
         id={id ? id : undefined}
       >
         <div className="flex flex-col items-start justify-end h-full">
-          <ContentSdkImage field={props.fields.PromoIcon} className="w-full h-auto object-cover" />
+          <ContentSdkImage
+            field={props.fields.PromoIcon}
+            className="w-full rounded-t-xl h-auto object-cover"
+          />
           <div className="flex-1 relative pt-4 px-6">
-            <ContentSdkRichText
-              tag="div"
-              className="inline-block text-base font-bold px-2 py-1 mb-4 bg-[#ffb900]"
-              field={props.fields.PromoText3}
-            />
             <ContentSdkRichText
               tag="h2"
               className="text-3xl font-bold mb-4"
@@ -57,14 +55,47 @@ export const Default = (props: PromoProps): JSX.Element => {
               className="text-base mb-4"
               field={props.fields.PromoText2}
             />
-          </div>
-          <Button
-            variant="default"
-            className="font-bold py-1 px-3 mx-6 mb-4 mt-auto relative b-0"
-            asChild
-          >
             <ContentSdkLink field={props.fields.PromoLink} />
-          </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <PromoDefaultComponent {...props} />;
+};
+
+export const ImageRight = (props: PromoProps): JSX.Element => {
+  const id = props.params.RenderingIdentifier;
+  if (props.fields) {
+    return (
+      <div
+        data-class-change
+        className={`component promo py-10 flex-1 pointer mb-5 lg:mb-0 ${props.params.styles}`}
+        id={id ? id : undefined}
+      >
+        <div className="grid grid-cols-4 items-start justify-end h-full">
+          <ContentSdkImage
+            field={props.fields.PromoIcon}
+            className="w-full h-auto col-span-1 object-cover rounded-full"
+          />
+          <div className="flex-1 relative content-center my-auto col-span-3 pt-4 px-6">
+            <ContentSdkRichText
+              tag="h2"
+              className="text-3xl font-bold mb-4"
+              field={props.fields.PromoText}
+            />
+            <ContentSdkRichText
+              tag="div"
+              className="text-base mb-4"
+              field={props.fields.PromoText2}
+            />
+
+            <ContentSdkLink
+              field={props.fields.PromoLink}
+              className="font-bold mt-auto relative b-0 btn btn-primary"
+            />
+          </div>
         </div>
       </div>
     );

@@ -32,25 +32,78 @@ type LinkListItemProps = {
   field: LinkField;
 };
 
-const LinkListItem = (props: LinkListItemProps) => {
-  let className = `item${props.index}`;
-  className += (props.index + 1) % 2 == 0 ? ' even' : ' odd';
-  if (props.index == 0) {
-    className += ' first';
-  }
-  if (props.index + 1 == props.total) {
-    className += ' last';
-  }
+const LinkListItem = ({ field }: LinkListItemProps) => {
   return (
-    <li className={className}>
-      <div>
+    <li className="mb-2">
+      <ContentSdkLink
+        className="text-gray-600 hover:underline focus:border focus:border-dashed focus:border-gray-500 inline-block px-2 py-2 focus:bg-gray-50 focus:outline focus:outline-dashed focus:ring-gray-500 aria-selected:bg-gray-100 text-nowrap word-break-[break-word] text-sm"
+        field={field}
+        prefetch={false}
+      />
+    </li>
+  );
+};
+
+export const HeroQuickLinks = (props: LinkListProps): JSX.Element => {
+  const datasource = props.fields?.data?.datasource;
+  const styles =
+    `p-10 bg-[#fff] rounded-4xl top-[-60px] shadow-xl relative font-sans ${props.params.styles}`.trimEnd();
+  const id = props.params.RenderingIdentifier;
+
+  const LinkListItem = ({ field }: LinkListItemProps) => {
+    return (
+      <li className="">
         <ContentSdkLink
-          className="text-gray-600 hover:underline focus:border focus:border-dashed focus:border-gray-500 inline-block px-2 py-2 focus:bg-gray-50 focus:outline focus:outline-dashed focus:ring-gray-500 aria-selected:bg-gray-100 text-nowrap word-break-[break-word] text-sm"
-          field={props.field}
+          className="border px-11 py-5 w-full rounded-full mb-5 text-nowrap inline-flex"
+          field={field}
           prefetch={false}
         />
+      </li>
+    );
+  };
+
+  if (datasource) {
+    const links = datasource.children.results.filter((el) => el?.field?.link);
+
+    // Distribute links into 3 columns
+    const columns: LinkField[][] = [[], [], []];
+    links.forEach((el, i) => {
+      columns[i % 3].push(el.field.link);
+    });
+
+    return (
+      <div data-class-change className={styles} id={id ? id : undefined}>
+        <div className="flex flex-col w-full">
+          <Text
+            tag="h3"
+            field={datasource?.field?.title}
+            className="text-nowrap mb-5 text-xl font-bold text-gray-600"
+          />
+          <div className="grid grid-cols-3 gap-4 w-full">
+            {columns.map((col, colIndex) => (
+              <ul key={colIndex} className="list-none p-0 m-0">
+                {col.map((link, linkIndex) => (
+                  <LinkListItem
+                    key={`${colIndex}-${linkIndex}`}
+                    index={linkIndex}
+                    field={link}
+                    total={0}
+                  />
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
       </div>
-    </li>
+    );
+  }
+
+  return (
+    <div data-class-change className={styles} id={id ? id : undefined}>
+      <div className="component-content">
+        <h3>Link List</h3>
+      </div>
+    </div>
   );
 };
 
@@ -82,6 +135,68 @@ export const Default = (props: LinkListProps): JSX.Element => {
           <ul className="list-none p-0 m-0" role="listbox" aria-label="Navigation options">
             {list}
           </ul>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div data-class-change className={styles} id={id ? id : undefined}>
+      <div className="component-content">
+        <h3>Link List</h3>
+      </div>
+    </div>
+  );
+};
+
+export const Vertical = (props: LinkListProps): JSX.Element => {
+  const datasource = props.fields?.data?.datasource;
+  const styles = `p-5 font-sans ${props.params.styles}`.trimEnd();
+  const id = props.params.RenderingIdentifier;
+
+  const LinkListItem = ({ field }: LinkListItemProps) => {
+    return (
+      <li className="">
+        <ContentSdkLink
+          className="border px-11 py-11 w-full rounded-xl mb-5 text-nowrap inline-flex bg-white"
+          field={field}
+          prefetch={false}
+        />
+      </li>
+    );
+  };
+
+  if (datasource) {
+    const links = datasource.children.results.filter((el) => el?.field?.link);
+
+    // Distribute links into 3 columns
+    const columns: LinkField[][] = [[], [], [], []];
+    links.forEach((el, i) => {
+      columns[i % 4].push(el.field.link);
+    });
+
+    return (
+      <div data-class-change className={styles} id={id ? id : undefined}>
+        <div className="flex flex-col w-full">
+          <Text
+            tag="h3"
+            field={datasource?.field?.title}
+            className="text-nowrap mb-5 text-xl font-bold text-gray-600"
+          />
+          <div className="grid grid-cols-4 gap-4 w-full">
+            {columns.map((col, colIndex) => (
+              <ul key={colIndex} className="list-none p-0 m-0">
+                {col.map((link, linkIndex) => (
+                  <LinkListItem
+                    key={`${colIndex}-${linkIndex}`}
+                    index={linkIndex}
+                    field={link}
+                    total={0}
+                  />
+                ))}
+              </ul>
+            ))}
+          </div>
         </div>
       </div>
     );

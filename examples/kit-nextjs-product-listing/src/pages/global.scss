@@ -1,0 +1,24 @@
+@import '../assets/styles/globals.css';
+@import 'tailwindcss';
+
+h1{
+    font-size: 35px;
+}
+
+h2{
+    font-size: 30px;
+    font-weight: 200;
+}
+
+.imageye-selected {
+    outline: 2px solid black !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.container-color-background{
+    background-color: #96b4d6;
+}
+
+.container-gray-background{
+    background-color: #eceeef;
+}

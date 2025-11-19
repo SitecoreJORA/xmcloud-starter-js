@@ -23,54 +23,26 @@ type PageHeaderSTProps = {
 };
 
 export const Default = (props: PageHeaderSTProps) => {
-  const { containerRef, rightOffset } = useContainerOffsets();
+  useContainerOffsets();
 
   return (
     <section
-      className={`relative flex items-center border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
+      className={`relative flex items-center bg-[#FCDA8C] border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
       data-class-change
     >
-      <div className="absolute inset-0 z-10">
-        <ContentSdkImage
-          field={props?.fields?.Image1}
-          width={1920}
-          height={1080}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="relative lg:container w-full lg:flex mx-auto z-20" ref={containerRef}>
-        <div className="flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[50rem] px-4 py-8 lg:p-8 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)]">
-          <div className="lg:max-w-3xl">
-            <h5 className="text-primary text-xl lg:text-3xl pb-4 uppercase">
-              <ContentSdkText field={props?.fields?.Eyebrow} />
-            </h5>
-            <h1 className="text-4xl lg:text-7xl uppercase">
-              <ContentSdkText field={props?.fields?.Title} />
-            </h1>
-            <div className="mt-8">
-              <ContentSdkLink
-                field={props?.fields?.Link1}
-                prefetch={false}
-                className="btn btn-primary mr-4"
-              />
-              <ContentSdkLink
-                field={props?.fields?.Link2}
-                prefetch={false}
-                className="btn btn-secondary"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          className={`lg:absolute top-0 bottom-0 left-2/3`}
-          style={{ right: `-${rightOffset - 16}px` }}
-        >
-          <ContentSdkImage
-            field={props?.fields?.Image1}
-            width={1920}
-            height={1080}
-            priority={true}
-            className="aspect-7/4 lg:aspect-auto w-full h-full object-cover"
+      <ContentSdkImage field={props?.fields?.Image1} width={630} height={500} className="" />
+      <div className="lg:max-w-3xl p-20">
+        <h1 className="text-xl lg:text-3xl pb-4">
+          <ContentSdkText field={props?.fields?.Eyebrow} />
+        </h1>
+        <p className="">
+          <ContentSdkText field={props?.fields?.Title} />
+        </p>
+        <div className="mt-8">
+          <ContentSdkLink
+            field={props?.fields?.Link1}
+            prefetch={false}
+            className="btn btn-primary mr-4"
           />
         </div>
       </div>
@@ -293,6 +265,57 @@ export const Stacked = (props: PageHeaderSTProps) => {
               className="absolute w-[calc(100%-5rem)] h-full left-20 top-0 right-0 bottom-0 object-cover"
             />
           </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const OldDefault = (props: PageHeaderSTProps) => {
+  const { containerRef, rightOffset } = useContainerOffsets();
+
+  return (
+    <section
+      className={`relative flex items-center border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
+      data-class-change
+    >
+      <div className="absolute inset-0 z-10">
+        <ContentSdkImage
+          field={props?.fields?.Image1}
+          width={1920}
+          height={1080}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="relative lg:container w-full lg:flex mx-auto z-20" ref={containerRef}>
+        <div className="flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[50rem] px-4 py-8 lg:p-8 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)]">
+          <div className="lg:max-w-3xl">
+            <h5 className="text-primary text-xl lg:text-3xl pb-4 uppercase">
+              <ContentSdkText field={props?.fields?.Eyebrow} />
+            </h5>
+            <h1 className="text-4xl lg:text-7xl uppercase">
+              <ContentSdkText field={props?.fields?.Title} />
+            </h1>
+            <div className="mt-8">
+              <ContentSdkLink
+                field={props?.fields?.Link1}
+                prefetch={false}
+                className="btn btn-primary mr-4"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className={`lg:absolute top-0 bottom-0 left-2/3`}
+          style={{ right: `-${rightOffset - 16}px` }}
+        >
+          <ContentSdkImage
+            field={props?.fields?.Image1}
+            width={1920}
+            height={1080}
+            priority={true}
+            className="aspect-7/4 lg:aspect-auto w-full h-full object-cover"
+          />
         </div>
       </div>
     </section>

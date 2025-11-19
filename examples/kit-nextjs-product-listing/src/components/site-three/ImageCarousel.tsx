@@ -3,9 +3,12 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { Image as ContentSdkImage } from '@sitecore-content-sdk/nextjs';
-import { IGQLImageField } from 'types/igql';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  Image as ContentSdkImage,
+  Text as ContentSdkText,
+  Link as ContentSdkLink,
+} from '@sitecore-content-sdk/nextjs';
+import { IGQLImageField, IGQLTextField, IGQLLinkField } from 'types/igql';
 
 interface Fields {
   data: {
@@ -19,7 +22,11 @@ interface Fields {
 
 export interface ImageCarouselItem {
   id: string;
+  name: string;
+  displayName: string;
   image: IGQLImageField;
+  backgroundText: IGQLTextField;
+  link: IGQLLinkField;
 }
 
 type ImageCarouselProps = {
@@ -31,23 +38,15 @@ export const Default = (props: ImageCarouselProps) => {
   const images = props.fields?.data?.datasource?.imageItems?.results || [];
 
   const [mainRef, mainApi] = useEmblaCarousel({ loop: false });
-  const [thumbRef, thumbApi] = useEmblaCarousel({
-    containScroll: 'keepSnaps',
-    dragFree: true,
-  });
-
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [fadeKey, setFadeKey] = useState(0);
 
   useEffect(() => {
-    if (!mainApi || !thumbApi) return;
+    if (!mainApi) return;
 
     const updateButtons = () => {
       setSelectedIndex(mainApi.selectedScrollSnap());
-      setCanScrollPrev(mainApi.canScrollPrev());
-      setCanScrollNext(mainApi.canScrollNext());
-      thumbApi.scrollTo(mainApi.selectedScrollSnap());
+      setFadeKey((prev) => prev + 1);
     };
 
     mainApi.on('select', updateButtons);
@@ -56,75 +55,61 @@ export const Default = (props: ImageCarouselProps) => {
     return () => {
       mainApi?.off('select', updateButtons);
     };
-  }, [mainApi, thumbApi]);
+  }, [mainApi]);
 
   const scrollTo = (index: number) => {
-    if (!mainApi || !thumbApi) return;
+    if (!mainApi) return;
     mainApi.scrollTo(index);
-    thumbApi.scrollTo(index);
   };
 
-  const carouselButtonStyles = `flex justify-center items-center absolute top-1/2 -translate-y-1/2 h-8 w-8 lg:h-10 lg:w-10 bg-primary hover:bg-primary-hover cursor-pointer disabled:pointer-events-none disabled:opacity-50`;
-
   return (
-    <section
-      className={`relative bg-cover ${props.params.styles}`}
-      style={{
-        backgroundImage: `linear-gradient(136deg, #ffffff14 2.61%, #ffffff26 73.95%), url(${images?.[0]?.image?.jsonValue?.value?.src || ''})`,
-      }}
-      data-class-change
-    >
-      <div className="backdrop-blur-md backdrop-grayscale backdrop-brightness-30">
-        <div className="container mx-auto px-4 pt-8 lg:pt-16 lg:pb-8 flex flex-col gap-4">
-          <div className="relative">
-            <div className="overflow-hidden" ref={mainRef}>
-              <div className="flex touch-pan-y">
-                {images.map((item) => (
-                  <div key={item.id} className="w-full relative aspect-2/1 flex-shrink-0">
-                    <ContentSdkImage
-                      field={item.image?.jsonValue}
-                      className="w-full h-full object-cover object-center"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button
-              onClick={() => mainApi?.scrollPrev()}
-              disabled={!canScrollPrev}
-              className={`-left-4 lg:-left-5 ${carouselButtonStyles}`}
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => mainApi?.scrollNext()}
-              disabled={!canScrollNext}
-              className={`-right-4 lg:-right-5 ${carouselButtonStyles}`}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div
-            className="overflow-hidden w-full max-w-4xl px-4 mx-auto -translate-y-8"
-            ref={thumbRef}
+    <section className="relative w-full bg-white">
+      {/* Tabs with Display Names */}
+      <div className="flex justify-center mt-4 gap-4">
+        {images.map((item, index) => (
+          <button
+            key={item.id}
+            onClick={() => scrollTo(index)}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              selectedIndex === index ? 'border rounded-full' : 'text-gray-500 hover:text-blue-600'
+            }`}
           >
-            <div className="flex gap-2">
-              {images.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`w-[calc((100%-0.5rem*3)/3)] lg:w-[calc((100%-0.5rem*3)/4)] flex-shrink-0 cursor-pointer overflow-hidden border transition-all mt-6 ${
-                    selectedIndex === index ? 'border-primary -translate-y-6' : 'border-transparent'
-                  }`}
-                  onClick={() => scrollTo(index)}
-                >
-                  <ContentSdkImage
-                    field={item.image?.jsonValue}
-                    className="w-full h-full aspect-2/1 object-cover"
-                  />
-                </div>
-              ))}
-            </div>
+            {item.displayName || item.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Static Red Box */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="grid col-span-1 justify-left align-center bg-[#b9e2fa]">
+          <div
+            key={fadeKey}
+            className="animate-fade opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards]"
+          >
+            <ContentSdkText
+              field={images[selectedIndex]?.backgroundText?.jsonValue}
+              className="text-3xl font-bold mb-4"
+            />
+            <ContentSdkLink
+              field={images[selectedIndex]?.link?.jsonValue}
+              className="flex items-center gap-2 text-lg font-medium hover:underline"
+            >
+              <span>→</span>
+            </ContentSdkLink>
+          </div>
+        </div>
+
+        {/* Image Carousel */}
+        <div className="overflow-hidden grid col-span-1" ref={mainRef}>
+          <div className="flex">
+            {images.map((item) => (
+              <div key={item.id} className="w-full relative flex-shrink-0">
+                <ContentSdkImage
+                  field={item.image?.jsonValue}
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

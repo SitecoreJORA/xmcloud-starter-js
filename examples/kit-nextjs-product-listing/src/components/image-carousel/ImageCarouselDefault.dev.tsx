@@ -1,209 +1,135 @@
 'use client';
 
-import { useState, useRef, useEffect, useId } from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Text } from '@sitecore-content-sdk/nextjs';
-import { Default as ImageWrapper } from '@/components/image/ImageWrapper.dev';
-import type { ImageCarouselProps } from './image-carousel.props';
-import { ButtonBase } from '../button-component/ButtonComponent';
-import { useMatchMedia } from '@/hooks/use-match-media';
-import { Default as AnimatedSection } from '@/components/animated-section/AnimatedSection.dev';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { NoDataFallback } from '@/utils/NoDataFallback';
-import { ImageCarouselEditMode } from './ImageCarouselEditMode.dev';
-import { cn } from '@/lib/utils';
-export const ImageCarouselDefault = (props: ImageCarouselProps) => {
-  const { fields, isPageEditing } = props;
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import {
+  Image as ContentSdkImage,
+  Text as ContentSdkText,
+  Link as ContentSdkLink,
+} from '@sitecore-content-sdk/nextjs';
+import { IGQLImageField, IGQLTextField, IGQLLinkField } from 'types/igql';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-  // Common Tailwind class groups
-  const containerClasses =
-    '@container group bg-primary text-primary-foreground relative flex w-full flex-col items-center justify-center py-[99px]';
-  const titleWrapperClasses =
-    'w-full space-y-4 px-4 group-[.position-center]:text-center group-[.position-right]:text-right';
-  const titleClasses =
-    'font-heading @md:text-7xl mx-auto max-w-[760px] text-pretty px-4 text-5xl text-box-trim-bottom-baseline';
-  const carouselContentClasses = '-ml-[100px] h-full items-stretch';
-  const carouselItemClasses =
-    '@md:basis-4/5 @lg:basis-2/3 pointer-events-none flex h-full basis-full flex-col justify-stretch pl-[100px] @md:max-w-1/2 mx-auto';
-  const slideContentClasses =
-    '@md:px-25 @md:-mt-[20%] @lg:-mt-[30%] @xl:-mt-[20%] @3xl:-mt-[10%] h-full w-full transform-gpu px-6 transition-all ease-in-out';
-  const backgroundTextWrapperClasses =
-    'flex h-full w-full translate-y-[-50%] items-center justify-center transition-all duration-700 ease-in-out';
-  const backgroundTextClasses =
-    'bg-primary-gradient text-fill-transparent text-[100px] @md:text-40-clamp bg-clip-text font-bold leading-none text-transparent';
-  const mainImageClasses = 'relative z-0 h-auto w-full max-w-[860px] mx-auto';
-  const controlsWrapperClasses = 'mt-8 flex items-center gap-4';
+interface Fields {
+  data: {
+    datasource: {
+      imageItems: {
+        results: ImageCarouselItem[];
+      };
+    };
+  };
+}
 
-  const { title, imageItems } = fields?.data?.datasource ?? {};
-  const { results: slides } = imageItems ?? { slides: {} };
+export interface ImageCarouselItem {
+  id: string;
+  image: IGQLImageField;
+  backgroundText: IGQLTextField;
+  link: IGQLLinkField;
+}
 
-  // State for tracking current slide
-  const [currentIndex, setCurrentIndex] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [api, setApi] = useState<any>(null);
+type ImageCarouselProps = {
+  params: { [key: string]: string };
+  fields: Fields;
+};
 
-  const slideshowId = useId();
-  const isReducedMotion = useMatchMedia('(prefers-reduced-motion: reduce)');
-  const liveRegionRef = useRef<HTMLDivElement>(null);
+export const Default = (props: ImageCarouselProps) => {
+  const images = props.fields?.data?.datasource?.imageItems?.results || [];
 
-  // Update the live region when the current slide changes
+  const [mainRef, mainApi] = useEmblaCarousel({ loop: false });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [fadeKey, setFadeKey] = useState(0); // For triggering fade animation
+
   useEffect(() => {
-    if (liveRegionRef.current && api && slides && slides.length > 0) {
-      const currentSlide = slides[currentIndex];
-      liveRegionRef.current.textContent = `Showing slide ${currentIndex + 1} of ${slides.length}: ${
-        currentSlide.backgroundText?.jsonValue?.value
-      }.`;
-    }
-  }, [currentIndex, slides, api]);
+    if (!mainApi) return;
 
-  // Set up the carousel API and event listeners
-  useEffect(() => {
-    if (!api) return;
+    const updateButtons = () => {
+      setSelectedIndex(mainApi.selectedScrollSnap());
+      setCanScrollPrev(mainApi.canScrollPrev());
+      setCanScrollNext(mainApi.canScrollNext());
+      setFadeKey((prev) => prev + 1); // Trigger fade animation
+    };
 
-    // Hide background text when slide change starts
-    api.on('select', () => {
-      setCurrentIndex(api.selectedScrollSnap());
-    });
+    mainApi.on('select', updateButtons);
+    updateButtons();
 
-    // Initial setup
-    setCurrentIndex(api.selectedScrollSnap());
-  }, [api]);
+    return () => {
+      mainApi?.off('select', updateButtons);
+    };
+  }, [mainApi]);
 
-  if (fields) {
-    // Render stacked list in edit mode
-    if (isPageEditing) {
-      return <ImageCarouselEditMode {...props} componentName="ImageCarouselDefault" />;
-    }
+  const scrollTo = (index: number) => {
+    if (!mainApi) return;
+    mainApi.scrollTo(index);
+  };
 
-    const hasPagesPositionStyles: boolean = props?.params?.styles
-      ? props?.params?.styles.includes('position-')
-      : false;
-
-    // Normal carousel view for non-edit mode
-    return (
-      <div
-        className={cn(containerClasses, {
-          'position-center': !hasPagesPositionStyles,
-          [props?.params?.styles]: props?.params?.styles,
-        })}
-        data-component="ImageCarouselDefault"
-      >
-        <AnimatedSection
-          direction="up"
-          isPageEditing={isPageEditing}
-          reducedMotion={isReducedMotion}
+  return (
+    <section className="relative w-full bg-white">
+      {/* Static Red Box */}
+      <div className="absolute top-0 left-0 h-full w-1/3 bg-red-600 text-white flex flex-col justify-center p-8 z-10">
+        <div
+          key={fadeKey}
+          className="animate-fade opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards]"
         >
-          <div className={titleWrapperClasses}>
-            <Text tag="h2" field={title.jsonValue} className={titleClasses} />
-          </div>
-        </AnimatedSection>
-
-        {/* Screen reader only live region to announce slide changes */}
-        <div ref={liveRegionRef} className="sr-only" aria-live="polite" aria-atomic="true"></div>
-
-        <div className="w-full" data-component-part="carousel wrapper">
-          <Carousel
-            setApi={setApi}
-            opts={{
-              align: 'center',
-              loop: true,
-              skipSnaps: false,
-              containScroll: 'trimSnaps',
-            }}
-            className="w-full overflow-visible"
-            aria-labelledby={`${slideshowId}-title`}
-            data-component-part="carousel"
+          <ContentSdkText
+            field={images[selectedIndex]?.backgroundText?.jsonValue}
+            className="text-3xl font-bold mb-4"
+          />
+          <ContentSdkLink
+            field={images[selectedIndex]?.link?.jsonValue}
+            className="flex items-center gap-2 text-lg font-medium hover:underline"
           >
-            <div id={`${slideshowId}-title`} className="sr-only">
-              Vehicle Models Slideshow, {currentIndex + 1} of {slides.length}
-            </div>
-
-            <CarouselContent
-              className={carouselContentClasses}
-              data-component-part="carousel content"
-            >
-              {slides.map((slide, index) => (
-                <CarouselItem
-                  key={index}
-                  className={carouselItemClasses}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${slide?.backgroundText?.jsonValue?.value || ''}, ${
-                    index === currentIndex ? 'current slide' : ''
-                  }`}
-                  tabIndex={index === currentIndex ? 0 : -1}
-                  data-component-part="carousel item"
-                >
-                  <div
-                    className={`${slideContentClasses} ${
-                      index === currentIndex ? 'scale-100' : 'scale-95'
-                    }`}
-                  >
-                    {slide?.backgroundText?.jsonValue && (
-                      <div
-                        className={backgroundTextWrapperClasses}
-                        style={{
-                          opacity: index === currentIndex ? 1 : 0,
-                          filter: index === currentIndex ? 'blur(0px)' : 'blur(10px)',
-                          transform:
-                            index === currentIndex
-                              ? 'scale(1) translateY(40%)'
-                              : 'scale(0.3) translateY(100%)',
-                          transitionDelay: '200ms',
-                        }}
-                      >
-                        <Text
-                          tag="p"
-                          field={slide?.backgroundText?.jsonValue}
-                          className={backgroundTextClasses}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <ImageWrapper image={slide.image?.jsonValue} className={mainImageClasses} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+            <span>→</span>
+          </ContentSdkLink>
         </div>
-
-        <AnimatedSection
-          direction="up"
-          isPageEditing={isPageEditing}
-          reducedMotion={isReducedMotion}
-        >
-          <div className={controlsWrapperClasses} role="group" aria-label="Slideshow controls">
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => api?.scrollPrev()}
-              aria-label="Previous slide"
-              aria-controls={`${slideshowId}-title`}
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-
-            {slides[currentIndex]?.link?.jsonValue && (
-              <ButtonBase variant="secondary" buttonLink={slides[currentIndex].link.jsonValue} />
-            )}
-
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => api?.scrollNext()}
-              aria-label="Next slide"
-              aria-controls={`${slideshowId}-title`}
-            >
-              <ChevronRight className="h-6 w-6" />
-            </Button>
-          </div>
-        </AnimatedSection>
-
-        {/* Keyboard navigation instructions for screen readers */}
-        <div className="sr-only">Use left and right arrow keys to navigate between slides.</div>
       </div>
-    );
-  }
-  return <NoDataFallback componentName="ImageCarousel" />;
+
+      {/* Image Carousel */}
+      <div className="overflow-hidden" ref={mainRef}>
+        <div className="flex">
+          {images.map((item) => (
+            <div key={item.id} className="w-full relative flex-shrink-0">
+              <ContentSdkImage
+                field={item.image?.jsonValue}
+                className="w-full h-[500px] object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="flex justify-center mt-4 gap-2">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => scrollTo(index)}
+            className={`w-3 h-3 rounded-full ${
+              selectedIndex === index ? 'bg-red-600' : 'bg-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Navigation Arrows */}
+      <div className="absolute bottom-4 right-4 flex gap-2">
+        <button
+          onClick={() => mainApi?.scrollPrev()}
+          disabled={!canScrollPrev}
+          className="p-2 bg-white border rounded shadow hover:bg-gray-100 disabled:opacity-50"
+        >
+          <ArrowLeft />
+        </button>
+        <button
+          onClick={() => mainApi?.scrollNext()}
+          disabled={!canScrollNext}
+          className="p-2 bg-white border rounded shadow hover:bg-gray-100 disabled:opacity-50"
+        >
+          <ArrowRight />
+        </button>
+      </div>
+    </section>
+  );
 };
